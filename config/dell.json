@@ -1,0 +1,12 @@
+{
+  "manufacturer": "Dell",
+  "configType": "postUrl",
+  "baseUrls": [
+    "https://www.dell.com/support/home/us/en/19/products/laptop",
+    "https://www.dell.com/support/home/us/en/19/products/desktop"
+  ],
+  "parentElement": {
+    "label": "divCatalogItems",
+    "type": "id"
+  }
+}
