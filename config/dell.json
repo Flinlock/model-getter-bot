@@ -1,12 +1,23 @@
 {
-  "manufacturer": "Dell",
-  "configType": "postUrl",
-  "baseUrls": [
-    "https://www.dell.com/support/home/us/en/19/products/laptop",
-    "https://www.dell.com/support/home/us/en/19/products/desktop"
-  ],
-  "parentElement": {
-    "label": "divCatalogItems",
-    "type": "id"
+  "Dell": {
+    "configType": "postUrl",
+    "baseUrls": [
+      "https://www.dell.com/support/home/us/en/19/products/laptop",
+      "https://www.dell.com/support/home/us/en/19/products/desktop"
+    ],
+    "parentElement": {
+      "label": "divCatalogItems",
+      "type": "id"
+    }
+  },
+  "test": {
+    "configType": "postUrl",
+    "baseUrls": [
+      "https://github.com/"
+    ],
+    "parentElement": {
+      "label": "test",
+      "type": "test"
+    }
   }
 }
