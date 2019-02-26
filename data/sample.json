@@ -1,0 +1,25 @@
+{
+  "dell": {
+    "adamo": [
+      {
+        "title": "Adamo 13",
+        "baseUrl": "https://www.dell.com/support/home/us/en/19/product-support/product/adamo-13"
+      },
+      {
+        "title": "Adamo XPS",
+        "baseUrl": "https://www.dell.com/support/home/us/en/19/product-support/product/adamo-xps"
+
+      }
+    ],
+    "alienware": [
+      {
+        "title": "Alienware 13",
+        "baseUrl": "https://www.dell.com/support/home/us/en/19/product-support/product/alienware-13"
+      },
+      {
+        "title": "Alienware 14",
+        "baseUrl": "https://www.dell.com/support/home/us/en/19/product-support/product/alienware-14"
+      }
+    ]
+  }
+}
