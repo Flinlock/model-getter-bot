@@ -16,6 +16,8 @@ LIBRARIES
     urllib2: To interact with URLs
 LOCAL FILES
     ./config (dir)
+    ./??? (dir)
+
 
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 ENVIRONMENT
@@ -30,11 +32,9 @@ DEVELOPER DEFNED
     configFile
         The file name that has the JSON configureation in
         Change this variable if the configuration file location changes
-
-AUTOMATED
-    configFiles
-        All of the file names listed inside the configDir that have the ending .json
-
+    dataFile
+        The file name that has the JSON data in
+        Change this variable if the configuration file location changes
 
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 CHANGELOG
@@ -54,12 +54,9 @@ import pprint as pp
 import os
 import urllib.request
 
+#Local Files
 configFile = 'config/dell.json'
-
-#Code to pull the path of all files ending with '.json' with configDir being the name of the directory
-#for file in os.listdir(configDir):
-#    if file.endswith(".json"):
-#        configFiles.append(os.path.join(configDir, file))
+dataFile = 'data/db.json'
 
 
 
@@ -76,25 +73,50 @@ def loadjson (jsonPath):
         return config
 
 
+
 """
 The function that will run for each config type of postURL
 """
 def postUrl (configJSON):
     '''Wrap this in a loop in case there are multiple urls to check'''
     for url in configJSON['baseUrls']:
-        page = urllib.request.urlopen(url)
-        soup = BeautifulSoup(page, from_encoding=page.info().get_param('charset'))
+        parentElement = configJSON['parentElement']
+        pElement = parentElement['element']
+        pPropertyType = parentElement['propertyType']
+        pPropertyLabel = parentElement['propertyLabel']
+        target = configJSON['target']
+        tElement = target['element']
+        tProperty = target['property']
+
+        #page = urllib.request.urlopen(url)
+        #soup = BeautifulSoup(page, from_encoding=page.info().get_param('charset'))
         '''find a way to get only links in certain divs'''
-        #for link in soup.find_all('a')
+        #for link in soup.find_all('a'):
         #    print(link.get('href'))
+        print (parentElement['element'])
 
 
 """
-This section of code is what actually runs
+This is the function you should run to get models. If model is blank, will return all models in config file
+
+RETURN FORMAT:
+{
+    "Dell": {
+        "adamo": {
+            "title": "Adamo 13",
+            "baseURL": "url"
+            }
+        }
+    }
+}
 """
-if loadjson(configFile) == False:
-    pp.pprint('Config File is not valid json. Please validate at https://jsonlint.com/')
-else:
+def getModels (model):
+
+    """Validate the json file"""
+    if loadjson(configFile) == False:
+        pp.pprint('Config File is not valid json. Please validate at https://jsonlint.com/')
+        return False
+
     allConfigs = loadjson(configFile)
     for config in allConfigs:
         thisConfigName = config
@@ -106,3 +128,17 @@ else:
             pp.pprint('This config type has not been set up yet')
         else:
             pp.pprint(thisConfig['configType'] + ' has not been set up yet')
+
+
+"""
+This function writes all the models into the data file
+"""
+def writeModels (models):
+
+    """Validate the json file"""
+    if loadjson(dataFile) == False:
+        pp.pprint('Data File is not valid json. Please validate at https://jsonlint.com/')
+        return False
+
+    allData = loadjson(dataFile)
+    return models

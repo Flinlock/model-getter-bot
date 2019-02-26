@@ -12,17 +12,8 @@
     },
     "target": {
       "element": "a",
-      "property": "href"
-    }
-  },
-  "test": {
-    "configType": "postUrl",
-    "baseUrls": [
-      "https://github.com/"
-    ],
-    "parentElement": {
-      "label": "test",
-      "type": "test"
+      "propertyType": "href",
+      "propertyLabel": null
     }
   }
 }
