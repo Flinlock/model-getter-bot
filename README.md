@@ -7,3 +7,6 @@ This bot fetches exhaustive model information for Dell computers from support.de
 
 # Configuration
 This bot uses a JSON configuration file that specifies the parent HTML element to target, child elements to loop through, and other special config information.
+
+# Data Storage
+Data obtained by this bot will be stored in the data folder. Please reference the sample.json file for a sample structure
