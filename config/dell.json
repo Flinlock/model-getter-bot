@@ -7,7 +7,7 @@
     ],
     "parentElement": {
       "element": "div",
-      "propertyType": "id",
+      "propertyType": "#",
       "propertyLabel": "divSubCategories"
     },
     "target": {

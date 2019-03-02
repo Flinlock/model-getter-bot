@@ -10,13 +10,14 @@ DEPENDANCIES
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
 LIBRARIES
     BeautifulSoup: To help with web scraping
+        Documentation: https://www.crummy.com/software/BeautifulSoup/bs4/doc/#
     json: To help with json parsing
     pprint: To help with printing things prettily
     os: To help with directory and file navigation
     urllib2: To interact with URLs
 LOCAL FILES
     ./config (dir)
-    ./??? (dir)
+    ./data (dir)
 
 
 <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
@@ -64,21 +65,23 @@ dataFile = 'data/db.json'
 loadjson validates the json in jsonPath
 If it loads correctly, it'll return the json object. If it loads incorrectly, it'll return False
 """
-def loadjson (jsonPath):
-    with open(configFile, 'r') as readjson:
+def loadJson (jsonPath):
+    with open(jsonPath, 'r') as readjson:
         try:
-            config = json.load(readjson)
+            jsonText = json.load(readjson)
         except:
             return False
-        return config
+        return jsonText
 
 
 
 """
+--PRIVATE FUNCTION--
 The function that will run for each config type of postURL
 """
 def postUrl (configJSON):
     '''Wrap this in a loop in case there are multiple urls to check'''
+    thisReturn = []
     for url in configJSON['baseUrls']:
         parentElement = configJSON['parentElement']
         pElement = parentElement['element']
@@ -86,14 +89,31 @@ def postUrl (configJSON):
         pPropertyLabel = parentElement['propertyLabel']
         target = configJSON['target']
         tElement = target['element']
-        tProperty = target['property']
+        tPropertyType = target['propertyType']
+        tPropertyLabel = target['propertyLabel']
 
-        #page = urllib.request.urlopen(url)
-        #soup = BeautifulSoup(page, from_encoding=page.info().get_param('charset'))
-        '''find a way to get only links in certain divs'''
-        #for link in soup.find_all('a'):
-        #    print(link.get('href'))
-        print (parentElement['element'])
+        page = urllib.request.urlopen(url)
+        soup = BeautifulSoup(page, features='html.parser', from_encoding=page.info().get_param('charset'))
+
+        '''This returns all full <a> tags. Need to just return the href part'''
+        thisReturn.append(soup.select('#' + pPropertyLabel + ' ' + tElement))
+
+    return thisReturn
+
+
+
+"""
+--PRIVATE FUNCTION--
+This function gets an indivudual model info. Split up so getModels function can loop through this if needed
+DO NOT RUN THIS FUNCTION - it shoud only be called from getModels
+"""
+def getModel (configName, config):
+    if config['configType'] == 'postUrl':
+        return postUrl (config)
+    elif config['configType'] == '???':
+        return 'The ??? config type has not been set up yet'
+    else:
+        return config['configType'] + ' has not been set up yet'
 
 
 """
@@ -110,24 +130,27 @@ RETURN FORMAT:
     }
 }
 """
-def getModels (model):
+def getModels (modelName):
 
-    """Validate the json file"""
-    if loadjson(configFile) == False:
-        pp.pprint('Config File is not valid json. Please validate at https://jsonlint.com/')
+    allConfigs = loadJson(configFile)
+    if allConfigs == False:
+        pp.pprint('Config File is not valid json.')
         return False
 
-    allConfigs = loadjson(configFile)
-    for config in allConfigs:
-        thisConfigName = config
-        thisConfig = allConfigs[config]
+    if modelName == '':
+        thisReturn = []
+        for config in allConfigs:
+            thisConfigName = config
+            thisConfig = allConfigs[config]
+            thisReturn.append(getModel(thisConfigName, thisConfig))
 
-        if thisConfig['configType'] == 'postUrl':
-            postUrl (thisConfig)
-        elif thisConfig['configType'] == '???':
-            pp.pprint('This config type has not been set up yet')
-        else:
-            pp.pprint(thisConfig['configType'] + ' has not been set up yet')
+    else:
+        thisConfigName = modelName
+        thisConfig = allConfigs[thisConfigName]
+        thisReturn = getModel(thisConfigName, thisConfig)
+
+    return thisReturn
+
 
 
 """
@@ -136,9 +159,12 @@ This function writes all the models into the data file
 def writeModels (models):
 
     """Validate the json file"""
-    if loadjson(dataFile) == False:
-        pp.pprint('Data File is not valid json. Please validate at https://jsonlint.com/')
+    if isValidJson(dataFile) == False:
+        pp.pprint('Data File is not valid json.')
         return False
 
     allData = loadjson(dataFile)
     return models
+
+
+print(getModels(''))
