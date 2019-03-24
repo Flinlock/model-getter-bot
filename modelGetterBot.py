@@ -73,6 +73,14 @@ def loadJson (jsonPath):
             return False
         return jsonText
 
+def getCSSElement (elementName):
+    if elementName == 'id':
+        return '#'
+    elif elementName == 'class':
+        return '.'
+    else:
+        return elementName
+
 
 
 """
@@ -85,18 +93,18 @@ def postUrl (configJSON):
     for url in configJSON['baseUrls']:
         parentElement = configJSON['parentElement']
         pElement = parentElement['element']
-        pPropertyType = parentElement['propertyType']
+        pPropertyType = getCSSElement(parentElement['propertyType'])
         pPropertyLabel = parentElement['propertyLabel']
         target = configJSON['target']
         tElement = target['element']
-        tPropertyType = target['propertyType']
+        tPropertyType = getCSSElement(target['propertyType'])
         tPropertyLabel = target['propertyLabel']
 
         page = urllib.request.urlopen(url)
         soup = BeautifulSoup(page, features='html.parser', from_encoding=page.info().get_param('charset'))
 
         '''This returns all full <a> tags. Need to just return the href part'''
-        thisReturn.append(soup.select('#' + pPropertyLabel + ' ' + tElement))
+        thisReturn.append(soup.select(pPropertyType + pPropertyLabel + ' ' + tElement + '.' + tPropertyType))
 
     return thisReturn
 
